@@ -58,7 +58,7 @@ class App extends Component<Props, State> {
           this.state.anualRaise,
           this.state.raiseFrecuency,
           this.state.baseRent,
-          filterData(this.state.yearFrom, this.state.data)
+          filterData(number, this.state.data)
         )
       });
     }
