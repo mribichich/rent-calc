@@ -1,56 +1,30 @@
 // @flow
 
 import React, { Component } from 'react';
-import moment from 'moment';
-import { range, groupBy, sum } from 'ramda';
+import { groupBy, sum } from 'ramda';
 import numeral from 'numeral';
 import 'numeral/locales/es';
 
 import FILE_DATA from './data.json';
+import { transform, filterData, calculateData } from './utils';
 
 numeral.locale('es');
 
 // const years = range(2013, 2018);
 
-function transform(data) {
-  return data.map(m => ({ datetime: moment(m.datetime, 'DD/MM/YYYY'), amount: m.amount }));
-}
-
 const DATA = transform(FILE_DATA);
 
-function filterData(year, data) {
-  const date = moment({ year: parseInt(year, 0) });
+type Props = {};
 
-  return data.filter(f => f.datetime >= date);
-}
+type State = {
+  yearFrom: number | null,
+  anualRaise: number | null,
+  raiseFrecuency: number | null,
+  baseRent: number | null,
+  data: []
+};
 
-function calculateMonthWithRaises(raiseFrecuency, raisesCount) {
-  return range(0, Math.floor(raisesCount)).map(m => m * raiseFrecuency + raiseFrecuency - 1);
-}
-
-function calculateData(anualRaise, raiseFrecuency, baseRent, data) {
-  const raisesCount = 12 / raiseFrecuency;
-  const raiseAmount = anualRaise / raisesCount;
-
-  const monthWithRaises = calculateMonthWithRaises(raiseFrecuency, raisesCount);
-
-  return data.reduce((acc, cur) => {
-    const raise = monthWithRaises.includes(cur.datetime.month()) ? raiseAmount : null;
-    const newBaseRent = acc.length === 0 ? baseRent : acc[acc.length - 1].newRent;
-    const newRent = newBaseRent + newBaseRent * (raise ? raise / 100 : 0);
-
-    return [
-      ...acc,
-      {
-        ...cur,
-        raise: monthWithRaises.includes(cur.datetime.month()) ? raiseAmount : null,
-        newRent: newRent
-      }
-    ];
-  }, []);
-}
-
-class App extends Component {
+class App extends Component<Props, State> {
   state = {
     yearFrom: 2013,
     anualRaise: 20,
@@ -70,9 +44,9 @@ class App extends Component {
     });
   }
 
-  handleOnYearFromChange = event => {
+  handleOnYearFromChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const number = value ? parseInt(value, 0) : value;
+    const number = value ? parseInt(value, 0) : null;
 
     this.setState({
       yearFrom: number
@@ -84,15 +58,15 @@ class App extends Component {
           this.state.anualRaise,
           this.state.raiseFrecuency,
           this.state.baseRent,
-          filterData(number, DATA)
+          filterData(this.state.yearFrom, this.state.data)
         )
       });
     }
   };
 
-  handleOnAnualRaiseChange = event => {
+  handleOnAnualRaiseChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const number = value ? parseInt(value, 0) : value;
+    const number = value ? parseInt(value, 0) : null;
 
     this.setState({
       anualRaise: number
@@ -100,14 +74,19 @@ class App extends Component {
 
     if (number) {
       this.setState({
-        data: calculateData(number, this.state.raiseFrecuency, this.state.baseRent, DATA)
+        data: calculateData(
+          number,
+          this.state.raiseFrecuency,
+          this.state.baseRent,
+          filterData(this.state.yearFrom, this.state.data)
+        )
       });
     }
   };
 
-  handleOnRaiseFrecuencyChange = event => {
+  handleOnRaiseFrecuencyChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const number = value ? parseInt(value, 0) : value;
+    const number = value ? parseInt(value, 0) : null;
 
     this.setState({
       raiseFrecuency: number
@@ -115,14 +94,19 @@ class App extends Component {
 
     if (number) {
       this.setState({
-        data: calculateData(this.state.anualRaise, number, this.state.baseRent, DATA)
+        data: calculateData(
+          this.state.anualRaise,
+          number,
+          this.state.baseRent,
+          filterData(this.state.yearFrom, this.state.data)
+        )
       });
     }
   };
 
-  handleOnBaseRentChange = event => {
+  handleOnBaseRentChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const number = value ? parseInt(value, 0) : value;
+    const number = value ? parseInt(value, 0) : null;
 
     this.setState({
       baseRent: number
@@ -130,7 +114,12 @@ class App extends Component {
 
     if (number) {
       this.setState({
-        data: calculateData(this.state.anualRaise, this.state.raiseFrecuency, number, DATA)
+        data: calculateData(
+          this.state.anualRaise,
+          this.state.raiseFrecuency,
+          number,
+          filterData(this.state.yearFrom, this.state.data)
+        )
       });
     }
   };
@@ -236,7 +225,7 @@ class App extends Component {
                 <td>Total Meses/Años:</td>
                 <td>
                   <strong>
-                    {totalMonths} / {totalMonths / 12}
+                    {totalMonths} / {numeral(totalMonths / 12).format('0,0.00')}
                   </strong>
                 </td>
               </tr>
