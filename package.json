@@ -2,6 +2,7 @@
   "name": "rent-calc",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://mribichich.github.io/rent-calc",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
