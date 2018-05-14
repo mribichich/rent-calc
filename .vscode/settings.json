@@ -1,4 +1,10 @@
 {
   "flow.pathToFlow": "${workspaceRoot}/node_modules/.bin/flow",
-  "javascript.validate.enable": false
+  "javascript.validate.enable": false,
+
+  "prettier.bracketSpacing": false,
+  "prettier.printWidth": 120,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "none",
+  "prettier.semi": true
 }

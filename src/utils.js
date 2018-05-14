@@ -23,6 +23,7 @@ export function calculateMonthWithRaises(raiseFrecuency, raisesCount) {
 }
 
 export function calculateData(anualRaise: number, raiseFrecuency: number, baseRent: number, data) {
+
   const raisesCount = 12 / raiseFrecuency;
   const raiseAmount = anualRaise / raisesCount;
 

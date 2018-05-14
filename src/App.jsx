@@ -14,10 +14,14 @@ numeral.locale('es');
 
 const DATA = transform(FILE_DATA);
 
-type Props = {};
+type Props = {
+  yearFrom: number | null,
+
+  setYearFrom: (yearFrom: number | null) => void
+};
 
 type State = {
-  yearFrom: number | null,
+  // yearFrom: number | null,
   anualRaise: number | null,
   raiseFrecuency: number | null,
   baseRent: number | null,
@@ -26,7 +30,7 @@ type State = {
 
 class App extends Component<Props, State> {
   state = {
-    yearFrom: 2013,
+    // yearFrom: 2013,
     anualRaise: 20,
     raiseFrecuency: 6,
     baseRent: 2500,
@@ -39,26 +43,28 @@ class App extends Component<Props, State> {
         this.state.anualRaise,
         this.state.raiseFrecuency,
         this.state.baseRent,
-        filterData(this.state.yearFrom, DATA)
+        filterData(this.props.yearFrom, DATA)
       )
     });
   }
 
   handleOnYearFromChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const number = value ? parseInt(value, 0) : null;
+    const year = value ? parseInt(value, 0) : null;
 
-    this.setState({
-      yearFrom: number
-    });
+    // this.setState({
+    //   yearFrom: number
+    // });
 
-    if (number) {
+    this.props.setYearFrom(year);
+
+    if (year) {
       this.setState({
         data: calculateData(
           this.state.anualRaise,
           this.state.raiseFrecuency,
           this.state.baseRent,
-          filterData(number, this.state.data)
+          filterData(year, DATA)
         )
       });
     }
@@ -66,19 +72,20 @@ class App extends Component<Props, State> {
 
   handleOnAnualRaiseChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const number = value ? parseInt(value, 0) : null;
+    const anualRaise = value ? parseInt(value, 0) : null;
 
     this.setState({
-      anualRaise: number
+      anualRaise: anualRaise
     });
 
-    if (number) {
+    if (anualRaise) {
       this.setState({
         data: calculateData(
-          number,
+          anualRaise,
           this.state.raiseFrecuency,
           this.state.baseRent,
-          filterData(this.state.yearFrom, this.state.data)
+          // filterData(this.props.yearFrom, this.state.data)
+          this.state.data
         )
       });
     }
@@ -86,19 +93,20 @@ class App extends Component<Props, State> {
 
   handleOnRaiseFrecuencyChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const number = value ? parseInt(value, 0) : null;
+    const raiseFrecuency = value ? parseInt(value, 0) : null;
 
     this.setState({
-      raiseFrecuency: number
+      raiseFrecuency: raiseFrecuency
     });
 
-    if (number) {
+    if (raiseFrecuency) {
       this.setState({
         data: calculateData(
           this.state.anualRaise,
-          number,
+          raiseFrecuency,
           this.state.baseRent,
-          filterData(this.state.yearFrom, this.state.data)
+          // filterData(this.props.yearFrom, this.state.data)
+          this.state.data
         )
       });
     }
@@ -106,19 +114,20 @@ class App extends Component<Props, State> {
 
   handleOnBaseRentChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const number = value ? parseInt(value, 0) : null;
+    const baseRent = value ? parseInt(value, 0) : null;
 
     this.setState({
-      baseRent: number
+      baseRent: baseRent
     });
 
-    if (number) {
+    if (baseRent) {
       this.setState({
         data: calculateData(
           this.state.anualRaise,
           this.state.raiseFrecuency,
-          number,
-          filterData(this.state.yearFrom, this.state.data)
+          baseRent,
+          // filterData(this.props.yearFrom, this.state.data)
+          this.state.data
         )
       });
     }
@@ -143,7 +152,7 @@ class App extends Component<Props, State> {
           {/* <select value={this.state.yearFrom} onChange={this.handleOnYearFromChange}>
             {years.map(m => <option key={m} value={m} label={m} />)}
           </select> */}
-          <input type="number" value={this.state.yearFrom} onChange={this.handleOnYearFromChange} min={2013} />
+          <input type="number" value={this.props.yearFrom} onChange={this.handleOnYearFromChange} min={2013} />
 
           <label style={{ marginLeft: 16, marginRight: 8 }}>% Aumento Anual</label>
           <input type="number" value={this.state.anualRaise} onChange={this.handleOnAnualRaiseChange} min={1} />

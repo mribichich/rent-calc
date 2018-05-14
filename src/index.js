@@ -1,8 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import './index.css';
+import AppContainer from './AppContainer';
+import registerServiceWorker from './registerServiceWorker';
+import reducers from './reducers';
+
+const store = createStore(reducers);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <AppContainer />
+  </Provider>,
+
+  document.getElementById('root')
+);
+
 registerServiceWorker();
