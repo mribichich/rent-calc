@@ -280,10 +280,34 @@
   },
   {
     "datetime": "01/11/2018",
-    "amount": 10000
+    "amount": 11000
   },
   {
     "datetime": "01/12/2018",
-    "amount": 12000
+    "amount": 12500
+  },
+  {
+    "datetime": "01/01/2019",
+    "amount": 14000
+  },
+  {
+    "datetime": "01/02/2019",
+    "amount": 15000
+  },
+  {
+    "datetime": "01/03/2019",
+    "amount": 15000
+  },
+  {
+    "datetime": "01/04/2019",
+    "amount": 15000
+  },
+  {
+    "datetime": "01/05/2019",
+    "amount": 15000
+  },
+  {
+    "datetime": "01/06/2019",
+    "amount": 15000
   }
 ]
